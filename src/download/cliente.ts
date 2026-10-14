@@ -1,7 +1,7 @@
 // Lado do content script: baixa um post arquivo por arquivo, pedindo ao service worker,
 // com novas tentativas e link renovado. Onde salva (dentro de Downloads):
-//   Pegai/<perfil>/<data> <começo da legenda> [<código>][ NN].mp4|jpg  +  ….txt (legenda)
-//   Pegai/Coleções/<nome da coleção>/<perfil>/…                       (botão "Baixar coleção")
+//   Pegai Downloads/<perfil>/<data> <começo da legenda> [<código>][ NN].mp4|jpg  +  ….txt (legenda)
+//   Pegai Downloads/Coleções/<nome da coleção>/<perfil>/…             (botão "Baixar coleção")
 // O código do post fica no nome entre colchetes: nomes nunca repetem, dá para achar o original
 // (instagram.com/p/<código>) e é por ele que a extensão sabe o que já foi baixado.
 import { CONFIG } from "../shared/config.ts";
@@ -92,16 +92,16 @@ export interface OpcoesDownload {
   aoProgredir?: (p: Progresso) => void;
   /** Busca o post de novo (link novo do CDN). */
   rebuscar: () => Promise<Post>;
-  /** Coleção salva: vai para Pegai/Coleções/<nome da coleção>/. */
+  /** Coleção salva: vai para Pegai Downloads/Coleções/<nome da coleção>/. */
   colecao?: string;
 }
 
-/** Pasta (relativa ao Downloads) de uma coleção: "Pegai/Coleções/Receitas". */
+/** Pasta (relativa ao Downloads) de uma coleção: "Pegai Downloads/Coleções/Receitas". */
 export async function pastaDaColecao(colecao: string): Promise<string> {
   return `${nomeLegivel(await pastaBase(), CONFIG.pastaBasePadrao)}/${CONFIG.pastaColecoes}/${nomeLegivel(colecao, "Coleção")}`;
 }
 
-/** Pasta (relativa ao Downloads) onde um post fica: "Pegai/<perfil>" ou "<pasta da coleção>/<perfil>". */
+/** Pasta (relativa ao Downloads) onde um post fica: "Pegai Downloads/<perfil>" ou "<pasta da coleção>/<perfil>". */
 export async function pastaDoPost(autor: string, colecao?: string): Promise<string> {
   const raiz = colecao ? await pastaDaColecao(colecao) : nomeLegivel(await pastaBase(), CONFIG.pastaBasePadrao);
   return `${raiz}/${pastaPerfil(autor)}`;

@@ -1,5 +1,5 @@
 // "Baixar coleção": na página de uma coleção salva, um botão baixa TODOS os posts dela para
-// Downloads/Pegai/Coleções/<nome da coleção>/<perfil>/, com o mesmo nome de arquivo dos avulsos.
+// Downloads/Pegai Downloads/Coleções/<nome da coleção>/<perfil>/, com o mesmo nome de arquivo dos avulsos.
 import { criarPilula, type Pilula } from "../botao/pilula.ts";
 import { arquivosExistem, baixarPost, pastaDaColecao } from "../download/cliente.ts";
 import { jaBaixado } from "../historico/index.ts";

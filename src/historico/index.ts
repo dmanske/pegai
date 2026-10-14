@@ -38,7 +38,9 @@ export function aoMudar(fn: () => void): void {
 export async function pastaBase(): Promise<string> {
   const r = await chrome.storage.local.get(CHAVES.pastaBase);
   const p = String(r[CHAVES.pastaBase] ?? "").trim();
-  return p || CONFIG.pastaBasePadrao;
+  // "Pegai" (padrão da 1.0.0) é a pasta da própria extensão descompactada: usa a nova.
+  if (!p || p === CONFIG.pastaAntiga) return CONFIG.pastaBasePadrao;
+  return p;
 }
 
 export async function mudarPastaBase(pasta: string): Promise<void> {

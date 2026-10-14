@@ -42,7 +42,7 @@ export interface RegistroHistorico {
   miniatura: string | null;
   /** Nome da coleção salva, quando veio do "Baixar coleção". */
   colecao?: string;
-  /** Pasta relativa ao Downloads ("Pegai/perfil"), para conferir se ainda existe. */
+  /** Pasta relativa ao Downloads ("Pegai Downloads/perfil"), para conferir se ainda existe. */
   pasta?: string;
 }
 

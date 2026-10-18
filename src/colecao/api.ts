@@ -29,11 +29,12 @@ async function pagina(id: string, maxId: string | null): Promise<PaginaApi> {
   }
 }
 
-/** Todos os posts da coleção, já no formato Post (com a maior versão de cada mídia). */
-export async function postsDaColecao(id: string, aoContar?: (n: number) => void): Promise<Post[]> {
+/** Todos os posts da coleção, já no formato Post (com a maior versão de cada mídia). `parar` interrompe a listagem. */
+export async function postsDaColecao(id: string, aoContar?: (n: number) => void, parar?: () => boolean): Promise<Post[]> {
   const posts: Post[] = [];
   let maxId: string | null = null;
   for (let voltas = 0; voltas < 200; voltas++) { // 200 páginas = teto de segurança
+    if (parar?.()) break;
     const p = await pagina(id, maxId);
     for (const { media } of p.items ?? []) {
       if (!media?.code) continue;

@@ -5,6 +5,7 @@ import { verificarColecao } from "../colecao/index.ts";
 import { arquivosExistem, baixarPost, ErroDownload, pastaDoPost } from "../download/cliente.ts";
 import { aoMudar, jaBaixado } from "../historico/index.ts";
 import { buscarPost, buscarStory, ErroIg } from "../midia/api.ts";
+import { extensaoRecarregada, MSG_EXTENSAO_RECARREGADA } from "../shared/erros.ts";
 import type { Post } from "../shared/types.ts";
 import { novosAlvos, slideVisivel } from "./alvos.ts";
 import type { Alvo, Referencia } from "./types/index.ts";
@@ -28,6 +29,7 @@ function buscar(ref: Referencia): Promise<Post> {
 }
 
 function mensagemDeErro(e: unknown): string {
+  if (extensaoRecarregada(e)) return MSG_EXTENSAO_RECARREGADA;
   if (e instanceof ErroIg && e.status === 429) return "O Instagram limitou os pedidos. Espere 1–2 minutos e tente de novo.";
   if (e instanceof ErroIg || e instanceof ErroDownload) return e.message;
   return "Algo deu errado: " + (e instanceof Error ? e.message : String(e));

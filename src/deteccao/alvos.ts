@@ -8,13 +8,20 @@ import type { Alvo, Referencia } from "./types/index.ts";
 
 const visivel = (el: Element) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
 
-/** A maior <img>/<video> dentro de `raiz` (a mídia do post, não avatar nem ícone). */
+/**
+ * A maior <img>/<video> dentro de `raiz` (a mídia do post, não avatar nem ícone), contando só a parte que fica
+ * DENTRO da raiz: do 2º slide em diante o carrossel deixa o anterior escondido ao lado, do mesmo tamanho e antes
+ * na página — sem isso o botão ia para fora da foto e "baixar este slide" baixava o slide anterior.
+ */
 function maiorMidia(raiz: Element): HTMLElement | null {
+  const c = raiz.getBoundingClientRect();
   let melhor: HTMLElement | null = null, area = 0;
   for (const el of raiz.querySelectorAll<HTMLElement>("img, video")) {
     const r = el.getBoundingClientRect();
     if (r.height < CONFIG.alturaMinimaMidia) continue;
-    if (r.width * r.height > area) { area = r.width * r.height; melhor = el; }
+    const dentro = Math.max(0, Math.min(r.right, c.right) - Math.max(r.left, c.left)) *
+      Math.max(0, Math.min(r.bottom, c.bottom) - Math.max(r.top, c.top));
+    if (dentro > area) { area = dentro; melhor = el; }
   }
   return melhor;
 }
@@ -104,8 +111,9 @@ function alvoStory(midia: HTMLElement, caixa: HTMLElement): Alvo {
       if (!s) return null;
       // pistas da mídia DESTE botão (não do meio da tela)
       const atual = maiorMidia(caixa) ?? midia;
+      // vídeo: a duração e, se houver, a capa (desempata partes de 60 s com a mesma duração)
       const pista = atual instanceof HTMLVideoElement
-        ? { duracao: isFinite(atual.duration) ? Math.round(atual.duration * 10) / 10 : undefined }
+        ? { duracao: isFinite(atual.duration) ? Math.round(atual.duration * 10) / 10 : undefined, imagens: [atual.poster].filter(Boolean) }
         : { imagens: [(atual as HTMLImageElement).currentSrc || (atual as HTMLImageElement).src].filter(Boolean) };
       return { tipo: "story", usuario: s.usuario, id: s.id, pista };
     },

@@ -5,6 +5,7 @@ import { arquivosExistem, baixarPost, pastaDaColecao } from "../download/cliente
 import { jaBaixado } from "../historico/index.ts";
 import { buscarPost, ErroIg } from "../midia/api.ts";
 import { CONFIG } from "../shared/config.ts";
+import { extensaoRecarregada, MSG_EXTENSAO_RECARREGADA } from "../shared/erros.ts";
 import { colecaoDaUrl, postsDaColecao } from "./api.ts";
 import type { ResumoColecao } from "./types/index.ts";
 
@@ -25,7 +26,12 @@ function nomeDaColecao(slug: string): string {
 async function baixarColecao(id: string, nome: string, p: Pilula): Promise<ResumoColecao> {
   const r: ResumoColecao = { total: 0, baixados: 0, pulados: 0, falhas: [], parado: false };
   p.mudar("ocupado", "Listando os posts…", "Clique de novo para parar.");
-  const posts = await postsDaColecao(id, (n) => p.mudar("ocupado", `Listando os posts… ${n}`, "Clique de novo para parar."));
+  // parar também vale durante a listagem (antes ela ia até o fim, que pode levar minutos)
+  const posts = await postsDaColecao(
+    id,
+    (n) => { if (!pedirParada) p.mudar("ocupado", `Listando os posts… ${n}`, "Clique de novo para parar."); },
+    () => pedirParada,
+  );
   r.total = posts.length;
   for (const [i, post] of posts.entries()) {
     if (pedirParada) { r.parado = true; break; }
@@ -59,12 +65,15 @@ async function aoClicar() {
       r.pulados ? `${r.pulados} já ${r.pulados > 1 ? "estavam" : "estava"}` : "",
       r.falhas.length ? `${r.falhas.length} com erro (${r.falhas.map((f) => f.codigo).join(", ")})` : "",
     ].filter(Boolean).join(" · ");
-    if (r.parado) p.mudar("normal", `Parado: ${r.baixados} de ${r.total} baixados`, partes + " · clique para continuar");
+    if (r.parado && !r.baixados && !r.pulados) p.mudar("normal", "Baixar coleção", "Parado antes de baixar. Clique para começar de novo.");
+    else if (r.parado) p.mudar("normal", `Parado: ${r.baixados} de ${r.total} baixados`, partes + " · clique para continuar");
     else if (r.falhas.length && !r.baixados && !r.pulados) p.mudar("erro", "Não consegui baixar a coleção", r.falhas[0].erro);
     else p.mudar("pronto", `Coleção salva: ${r.baixados + r.pulados} de ${r.total} posts`, partes);
   } catch (e) {
     console.warn("[Pegaí] coleção", e);
-    const msg = e instanceof ErroIg && e.status === 429 ? "O Instagram limitou os pedidos. Espere alguns minutos e tente de novo." : e instanceof Error ? e.message : String(e);
+    const msg = extensaoRecarregada(e) ? MSG_EXTENSAO_RECARREGADA
+      : e instanceof ErroIg && e.status === 429 ? "O Instagram limitou os pedidos. Espere alguns minutos e tente de novo."
+      : e instanceof Error ? e.message : String(e);
     p.mudar("erro", "Não consegui listar a coleção", msg);
   } finally {
     rodando = false; pedirParada = false;

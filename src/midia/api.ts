@@ -160,12 +160,14 @@ export async function buscarStory(usuario: string, idStory: string | null, pista
   }
   if (!itens.length) throw new ErroIg("Este perfil não tem stories ativos agora", 404);
 
-  // o story da TELA: duração do vídeo tocando → nome do arquivo da imagem. Sem casar, não adivinha.
+  // o story da TELA: duração do vídeo tocando → nome do arquivo da imagem. Só vale se casar com UM:
+  // vídeo longo vira partes de 60 s com a mesma duração, e pegar a primeira baixaria a parte errada.
+  const unico = (lista: ItemIg[]) => (lista.length === 1 ? lista[0] : undefined);
   let alvo: ItemIg | undefined;
-  if (pista.duracao) alvo = itens.find((i) => i.video_duration && Math.abs(i.video_duration - pista.duracao!) < 0.8);
+  if (pista.duracao) alvo = unico(itens.filter((i) => i.video_duration && Math.abs(i.video_duration - pista.duracao!) < 0.8));
   if (!alvo && pista.imagens?.length) {
     const nomes = pista.imagens.map(nomeDoArquivo).filter(Boolean);
-    alvo = itens.find((i) => (i.image_versions2?.candidates ?? []).some((c) => nomes.includes(nomeDoArquivo(c.url))));
+    alvo = unico(itens.filter((i) => (i.image_versions2?.candidates ?? []).some((c) => nomes.includes(nomeDoArquivo(c.url)))));
   }
   if (!alvo) throw new ErroIg("Não consegui saber qual story está na tela — abra o story pelo link dele e tente de novo", 0);
   const id = String(alvo.pk ?? alvo.id ?? "").split("_")[0];

@@ -45,9 +45,15 @@ function tituloDaLegenda(legenda: string): string {
   return titulo;
 }
 
+/** "2026-10-11" no fuso de quem baixa. (toISOString é UTC: um post das 22h no Brasil saía com a data do dia seguinte.) */
+function dataLocal(d: Date): string {
+  const dois = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${dois(d.getMonth() + 1)}-${dois(d.getDate())}`;
+}
+
 /** "2026-10-11 Bolo de cenoura fofinho [CxYz123AbcD]" */
 export function nomeDoPost(post: Post): string {
-  const data = (post.postadoEm ?? new Date().toISOString()).slice(0, 10);
+  const data = dataLocal(post.postadoEm ? new Date(post.postadoEm) : new Date());
   const titulo = tituloDaLegenda(post.legenda) || `${post.origem === "story" ? "story" : "post"} de @${post.autor}`;
   return nomeLegivel(`${data} ${titulo} [${post.codigo}]`);
 }

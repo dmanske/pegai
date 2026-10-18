@@ -28,7 +28,8 @@ Deixe a pasta `Pegai-extensao` num lugar fixo (por exemplo, Documentos): o Chrom
 apagada ou movida, a extensão para de funcionar.
 
 **Para atualizar:** baixe o zip novo, substitua a pasta `Pegai-extensao` e clique em **Recarregar (↻)** no cartão
-do Pegaí em `chrome://extensions`.
+do Pegaí em `chrome://extensions`. Depois recarregue (F5) as abas do Instagram que estavam abertas: elas continuam
+com a versão antiga até serem recarregadas.
 
 **Vindo da 1.0.0?** Lá a extensão e os downloads usavam a mesma pasta, `Downloads/Pegai`. Agora os downloads vão
 para `Downloads/Pegai Downloads` sozinhos. Mova o que você já baixou para a pasta nova, carregue a
@@ -98,7 +99,7 @@ Also works on Edge and Brave (same base as Chrome). Keep the `Pegai-extensao` fo
 Documents): Chrome loads the extension from it.
 
 **To update:** download the new zip, replace the `Pegai-extensao` folder and click **Reload (↻)** on the Pegaí card in
-`chrome://extensions`.
+`chrome://extensions`. Then refresh (F5) any Instagram tabs that were open: they keep the old version until refreshed.
 
 ### Where files go
 
@@ -152,7 +153,8 @@ También funciona en Edge y Brave (misma base que Chrome). Guarda la carpeta `Pe
 ejemplo, Documentos): Chrome carga la extensión desde ahí.
 
 **Para actualizar:** descarga el zip nuevo, reemplaza la carpeta `Pegai-extensao` y haz clic en **Recargar (↻)** en la
-tarjeta de Pegaí en `chrome://extensions`.
+tarjeta de Pegaí en `chrome://extensions`. Después recarga (F5) las pestañas de Instagram que estaban abiertas: siguen
+con la versión anterior hasta que se recargan.
 
 ### Dónde quedan los archivos
 

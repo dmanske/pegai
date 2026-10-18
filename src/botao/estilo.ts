@@ -13,11 +13,15 @@ button.todos[hidden] { display: none; }
 button.todos[disabled] { opacity: .45; cursor: progress; }
 button { all: unset; box-sizing: border-box; width: 36px; height: 36px; border-radius: 50%;
   display: grid; place-items: center; cursor: pointer; position: relative;
-  background: rgba(255,255,255,.92); color: #111; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.18);
+  background: #fff; color: #000; box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.18);
   transition: transform .12s ease, background .12s ease; }
 button:hover { background: #fff; transform: scale(1.06); }
 button:active { transform: scale(.96); }
 button:focus-visible { outline: 2px solid #0095f6; outline-offset: 2px; }
+/* botão de cima: branco sólido, sombra mais forte e seta mais grossa (o branco 92% sumia em post claro).
+   Só sombra e traço aqui: o fundo vem da regra de cima, para o verde/vermelho dos estados continuarem valendo. */
+button.principal { box-shadow: 0 0 0 1px rgba(0,0,0,.14), 0 2px 4px rgba(0,0,0,.28), 0 6px 16px rgba(0,0,0,.22); }
+button.principal svg { stroke-width: 2.5; }
 button[data-estado="pronto"] { color: #fff; background: #1f8a4c; }
 button[data-estado="erro"] { color: #fff; background: #c62828; }
 button[data-estado="desativado"] { color: #8e8e8e; cursor: not-allowed; }

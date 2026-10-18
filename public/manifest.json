@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pegaí",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Baixa post, reel, story, carrossel e coleções salvas do Instagram com um botão em cada mídia.",
   "permissions": [
     "downloads",

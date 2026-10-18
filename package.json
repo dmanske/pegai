@@ -1,6 +1,6 @@
 {
   "name": "pegai",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "Extensão do Chrome que baixa posts do Instagram (post, reel, story, carrossel e coleções salvas).",
   "type": "module",
